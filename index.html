@@ -3,9 +3,8 @@
 <head>
   <title>BUILD MY BODY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  <!-- Correct Supabase Script -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -15,9 +14,7 @@
       padding: 40px;
     }
 
-    h1 {
-      color: #D4AF37;
-    }
+    h1 { color: #D4AF37; }
 
     .card {
       background: #1c1c1c;
@@ -47,48 +44,30 @@
       cursor: pointer;
     }
 
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
   </style>
 </head>
-
 <body>
-
 <h1>BUILD MY BODY</h1>
 <p>by Pierre Abranches</p>
-
-<!-- AUTH -->
 <div id="auth" class="card">
   <h2>Login / Signup</h2>
-
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
-
   <br>
   <button onclick="signUp()">Sign Up</button>
   <button onclick="login()">Login</button>
-
   <p id="authMsg"></p>
 </div>
-
-<!-- DASHBOARD -->
 <div id="dashboard" class="card hidden">
   <h2>Dashboard</h2>
   <p>Welcome to BUILD MY BODY</p>
-
   <h3>BMI Calculator</h3>
-
   <input id="weight" placeholder="Weight (kg)" type="number">
   <input id="height" placeholder="Height (cm)" type="number">
-
   <button onclick="calcBMI()">Calculate</button>
-
   <p id="result"></p>
-
-  <button onclick="logout()">Logout</button>
 </div>
-
 <script>
 const SUPABASE_URL = "https://mgqjotpbbifsivgovdnv.supabase.co";
 const SUPABASE_KEY = "sb_publishable__1pYlvGapB_5ISr8_OKig_g-DsrtaV";
@@ -96,13 +75,14 @@ const SUPABASE_KEY = "sb_publishable__1pYlvGapB_5ISr8_OKig_g-DsrtaV";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
+// SIGN UP
 async function signUp() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   const { error } = await supabase.auth.signUp({
     email,
-    password,
+    password
   });
 
   document.getElementById("authMsg").innerText =
@@ -110,13 +90,14 @@ async function signUp() {
 }
 
 
+// LOGIN
 async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
-    password,
+    password
   });
 
   if (error) {
@@ -128,12 +109,14 @@ async function login() {
 }
 
 
-function logout() {
-  supabase.auth.signOut();
+// LOGOUT
+async function logout() {
+  await supabase.auth.signOut();
   location.reload();
 }
 
 
+// BMI
 function calcBMI() {
   const weight = document.getElementById("weight").value;
   const height = document.getElementById("height").value / 100;
@@ -141,10 +124,8 @@ function calcBMI() {
   if (!weight || !height) return;
 
   const bmi = (weight / (height * height)).toFixed(2);
-
   document.getElementById("result").innerText = "BMI: " + bmi;
 }
 </script>
-
 </body>
 </html>
