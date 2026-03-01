@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>BUILDMYBODY</title>
+  <title>BUILD MY BODY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-window.addEventListener("load", () => {
 
   <style>
     body {
@@ -22,30 +20,30 @@ window.addEventListener("load", () => {
     }
 
     .card {
-      background: #1A1A1A;
-      padding: 20px;
+      background: #1c1c1c;
+      padding: 25px;
       border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
       margin-top: 20px;
-      display: inline-block;
-      width: 300px;
     }
 
     input {
-      padding: 10px;
-      margin: 5px;
       width: 90%;
+      padding: 12px;
+      margin: 8px;
       border-radius: 6px;
       border: none;
     }
 
     button {
-      padding: 10px 20px;
       background: #D4AF37;
       border: none;
       color: black;
-      font-weight: bold;
-      margin-top: 10px;
+      padding: 12px 20px;
+      margin: 10px;
       border-radius: 6px;
+      font-weight: bold;
       cursor: pointer;
     }
 
@@ -54,27 +52,36 @@ window.addEventListener("load", () => {
     }
   </style>
 </head>
+
 <body>
 
-<h1>BUILDMYBODY</h1>
+<h1>BUILD MY BODY</h1>
 <p>by Pierre Abranches</p>
 
+<!-- AUTH -->
 <div id="auth" class="card">
   <h2>Login / Signup</h2>
+
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
+
+  <br>
   <button onclick="signUp()">Sign Up</button>
   <button onclick="login()">Login</button>
+
   <p id="authMsg"></p>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard" class="card hidden">
   <h2>Dashboard</h2>
-  <p>Welcome to BUILDMYBODY</p>
+  <p>Welcome to BUILD MY BODY</p>
 
   <h3>BMI Calculator</h3>
+
   <input id="weight" placeholder="Weight (kg)" type="number">
   <input id="height" placeholder="Height (cm)" type="number">
+
   <button onclick="calcBMI()">Calculate</button>
 
   <p id="result"></p>
@@ -83,10 +90,11 @@ window.addEventListener("load", () => {
 </div>
 
 <script>
-const SUPABASE_URL = "https://mgqjotpbpifsivgovdnv.supabase.co";
-const SUPABASE_KEY = "sb_publishable_--1pYlvGapB_5ISr8_OKig_g-DsrtaV";
+const SUPABASE_URL = "https://mgqjotpbbifsivgovdnv.supabase.co";
+const SUPABASE_KEY = "sb_publishable__1pYlvGapB_5ISr8_OKig_g-DsrtaV";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 
 async function signUp() {
   const email = document.getElementById("email").value;
@@ -94,12 +102,13 @@ async function signUp() {
 
   const { error } = await supabase.auth.signUp({
     email,
-    password
+    password,
   });
 
   document.getElementById("authMsg").innerText =
-    error ? error.message : "Signup successful!";
+    error ? error.message : "Signup successful! Check your email.";
 }
+
 
 async function login() {
   const email = document.getElementById("email").value;
@@ -107,43 +116,35 @@ async function login() {
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
-    password
+    password,
   });
 
   if (error) {
     document.getElementById("authMsg").innerText = error.message;
   } else {
-    showDashboard();
+    document.getElementById("auth").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
   }
 }
 
-async function logout() {
-  await supabase.auth.signOut();
+
+function logout() {
+  supabase.auth.signOut();
   location.reload();
 }
 
-function showDashboard() {
-  document.getElementById("auth").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-}
-
-async function checkUser() {
-  const { data } = await supabase.auth.getUser();
-  if (data.user) showDashboard();
-}
-
-checkUser();
 
 function calcBMI() {
-  let w = document.getElementById('weight').value;
-  let h = document.getElementById('height').value / 100;
-  let bmi = w / (h*h);
-  document.getElementById('result').innerText =
-    "Your BMI: " + bmi.toFixed(2);
+  const weight = document.getElementById("weight").value;
+  const height = document.getElementById("height").value / 100;
+
+  if (!weight || !height) return;
+
+  const bmi = (weight / (height * height)).toFixed(2);
+
+  document.getElementById("result").innerText = "BMI: " + bmi;
 }
 </script>
 
 </body>
 </html>
-});
-</script>
